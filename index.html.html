@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour toi</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: linear-gradient(135deg, #fff0f3, #ffe4ec, #fff5f7);
+    padding: 20px;
+  }
+  .card {
+    max-width: 520px;
+    width: 100%;
+    background: #fffafc;
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 10px 40px rgba(212, 83, 126, 0.15);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 1s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .heart-top {
+    text-align: center;
+    font-size: 32px;
+    color: #d4537e;
+    margin-bottom: 10px;
+  }
+  #msg {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #4b1528;
+    white-space: pre-line;
+    text-align: left;
+  }
+  .btn {
+    display: block;
+    margin: 24px auto 0;
+    background: #d4537e;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 32px;
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .btn:hover { background: #c1416c; transform: scale(1.03); }
+
+  #question {
+    display: none;
+    text-align: center;
+    margin-top: 26px;
+    animation: fadeIn 0.8s ease;
+  }
+  #question p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4b1528;
+    margin-bottom: 18px;
+  }
+  .choice-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  #yesBtn {
+    background: #d4537e;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 32px;
+    font-size: 17px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.2s;
+  }
+  #yesBtn:hover { background: #c1416c; }
+  #noBtn {
+    background: transparent;
+    color: #999;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    padding: 14px 32px;
+    font-size: 17px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #finalYes {
+    display: none;
+    text-align: center;
+    margin-top: 26px;
+    animation: fadeIn 1s ease;
+  }
+  #bigHeart {
+    font-size: 64px;
+    color: #d4537e;
+    animation: pulseHeart 1.2s ease-in-out infinite;
+  }
+  #finalYes p {
+    font-size: 19px;
+    font-weight: bold;
+    color: #4b1528;
+    margin-top: 14px;
+  }
+  #whatsappBtn {
+    display: inline-block;
+    margin-top: 18px;
+    background: #25D366;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: transform 0.2s, background 0.2s;
+  }
+  #whatsappBtn:hover { background: #1ebc59; transform: scale(1.03); }
+
+  /* === Galerie photos : ajoute tes images ici === */
+  #gallery {
+    display: none;
+    margin-top: 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  #gallery img {
+    width: 100%;
+    border-radius: 14px;
+    object-fit: cover;
+    aspect-ratio: 3/4;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+  }
+  #gallery img:nth-child(1) { animation-delay: 0.2s; }
+  #gallery img:nth-child(2) { animation-delay: 0.5s; }
+  #gallery img:nth-child(3) { animation-delay: 0.8s; grid-column: span 2; aspect-ratio: 16/9; }
+
+  @keyframes pulseHeart {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  @keyframes shakeNo {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px) rotate(-3deg); }
+    75% { transform: translateX(6px) rotate(3deg); }
+  }
+  .shake { animation: shakeNo 0.4s ease; }
+
+  canvas#fw {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div class="heart-top">&#9825;</div>
+
+  <div id="msg">Salam,
+J'espère que tu vas bien.
+Je t'écris avec beaucoup de sincérité. Depuis notre séparation, j'ai essayé d'avancer et de tourner la page, mais la vérité c'est que tu es toujours dans mes pensées.
+J'ai même essayé de reconstruire ailleurs, mais rien n'a effacé ce que je ressens encore pour toi. Tu me manques, ton sourire, ta simplicité, et cette lumière que tu avais en toi.
+Aujourd'hui je viens sans pression ni orgueil. Je ne veux pas déranger ta vie, je veux juste être honnête avec toi.
+Wallahi, je me demande encore si nous avons réellement tout terminé ou s'il reste une petite chance pour nous.
+Si tu ne ressens plus rien, je comprendrai et je respecterai totalement ton choix. Mais si au fond de toi il reste quelque chose, j'aimerais qu'on puisse en parler calmement.
+Incha'Allah kheir, quoi que tu décides, je te souhaite le meilleur.</div>
+
+  <button class="btn" id="revealBtn">Continuer</button>
+
+  <div id="question">
+    <p>Est-ce que tu acceptes de me donner une seconde chance ? &#9825;</p>
+    <div class="choice-row">
+      <button id="yesBtn">OUI &#9825;</button>
+      <button id="noBtn">NON</button>
+    </div>
+  </div>
+
+  <div id="finalYes">
+    <div id="bigHeart">&#9825;</div>
+    <p>Merci... Incha'Allah &#9825;</p>
+
+    <a id="whatsappBtn" href="https://wa.me/2250173619445?text=Oui%2C%20je%20te%20donne%20une%20seconde%20chance%20%E2%9D%A4%EF%B8%8F" target="_blank">
+      Lui envoyer un message &#10003;
+    </a>
+
+    <!--
+      ====================================================
+      AJOUTE TES PHOTOS ICI
+      Remplace "photo1.jpg", "photo2.jpg", "photo3.jpg" par
+      les noms de tes fichiers images, placés dans le même
+      dossier que ce fichier HTML.
+      ====================================================
+    -->
+    <div id="gallery">
+      <img src="photo1.jpg" alt="">
+      <img src="photo2.jpg" alt="">
+      <img src="photo3.jpg" alt="">
+    </div>
+  </div>
+
+  <canvas id="fw"></canvas>
+</div>
+
+<script>
+document.getElementById('revealBtn').addEventListener('click', function () {
+  this.style.display = 'none';
+  document.getElementById('question').style.display = 'block';
+});
+
+let noClicks = 0;
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const funnyTexts = ['NON ?', 'Tu es sûr(e) ?', 'Vraiment ?', 'Réfléchis encore...', 'Allez...', 'Steuplait ?', 'Dernière chance...', "Bon d'accord..."];
+
+noBtn.addEventListener('click', function () {
+  noClicks++;
+  let scale = Math.min(1 + noClicks * 0.18, 3);
+  yesBtn.style.transform = 'scale(' + scale + ')';
+
+  let noScale = Math.max(1 - noClicks * 0.12, 0.3);
+  let noOpacity = Math.max(1 - noClicks * 0.15, 0.15);
+  noBtn.style.transform = 'scale(' + noScale + ')';
+  noBtn.style.opacity = noOpacity;
+
+  noBtn.classList.remove('shake');
+  void noBtn.offsetWidth;
+  noBtn.classList.add('shake');
+
+  if (noClicks <= funnyTexts.length) {
+    noBtn.textContent = funnyTexts[noClicks - 1];
+  }
+  if (noClicks >= 8) {
+    noBtn.style.pointerEvents = 'none';
+  }
+});
+
+yesBtn.addEventListener('click', function () {
+  document.getElementById('question').style.display = 'none';
+  document.getElementById('finalYes').style.display = 'block';
+  document.getElementById('gallery').style.display = 'grid';
+
+  const canvas = document.getElementById('fw');
+  canvas.style.display = 'block';
+  const card = document.getElementById('card');
+  canvas.width = card.offsetWidth;
+  canvas.height = card.offsetHeight;
+  const ctx = canvas.getContext('2d');
+
+  let particles = [];
+  const colors = ['#d4537e', '#f0997b', '#fac775', '#ed93b1', '#993556'];
+
+  function spawn() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.6;
+    for (let i = 0; i < 30; i++) {
+      const angle = (Math.PI * 2 * i) / 30;
+      const speed = 2 + Math.random() * 2;
+      particles.push({
+        x: x, y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 1,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+  }
+
+  let frame = 0;
+  function animate() {
+    frame++;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (frame % 35 === 1 && frame < 250) spawn();
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.04;
+      p.life -= 0.02;
+      ctx.globalAlpha = Math.max(p.life, 0);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    particles = particles.filter(p => p.life > 0);
+    if (frame < 350) requestAnimationFrame(animate);
+    else canvas.style.display = 'none';
+  }
+  animate();
+});
+</script>
+
+</body>
+</html>
